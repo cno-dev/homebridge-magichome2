@@ -1,8 +1,10 @@
-# homebridge-magichome
+# homebridge-magichome2
 
 **A Homebridge plugin for devices running on the Magic Home Wi-Fi system.**
 
 The plugin includes and uses a slightly modified version of [flux_led.py](https://github.com/beville/flux_led).
+
+This plugin is forked from the original [homebridge-magichome plugin](https://github.com/steve228uk/homebridge-magichome).  It includes changes to allow the use of RGB strip controllers in single channel mode by utilizing the blue channel to control brighness only.
 
 ## Installation
 
@@ -21,7 +23,8 @@ Next, add a new accessory to your Homebridge `config.json`. You can add as many 
        "name": "LED Strip",
        "ip": "192.168.1.111",
        "setup": "RGBWW",
-       "purewhite": false
+       "purewhite": false,
+       "singleChannel": false
    }
 ]
 ````
@@ -29,6 +32,8 @@ Next, add a new accessory to your Homebridge `config.json`. You can add as many 
 The `setup` option is `RGBW` by default which is likely the setting you'll want. Some devices require `RGBWW` or `RGB` to work correctly.
 
 The `purewhite` option should be included for lights with a dedicated white LED. This is likely only the case for bulbs and is therefore set to false by default.
+
+The `singleChannel` option can be used for RGB strip devices connected to single color LED strip.  Use the Blue channel to connect your strip.
 
 ## Compatible Devices
 

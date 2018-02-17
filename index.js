@@ -23,6 +23,7 @@ function MagicHomeAccessory(log, config, api) {
     this.ip = config.ip;
     this.color = Color.hsv([0, 0, 100]);
     this.purewhite = config.purewhite || false;
+    this.singleChannel = config.singleChannel || false;
 
     this.getColorFromDevice();
 
@@ -49,19 +50,21 @@ MagicHomeAccessory.prototype.getServices = function() {
         .on('set', this.setPowerState.bind(this));
 
     lightbulbService
-        .addCharacteristic(new Characteristic.Hue())
-        .on('get', this.getHue.bind(this))
-        .on('set', this.setHue.bind(this));
-
-    lightbulbService
-        .addCharacteristic(new Characteristic.Saturation())
-        .on('get', this.getSaturation.bind(this))
-        .on('set', this.setSaturation.bind(this));
-
-        lightbulbService
         .addCharacteristic(new Characteristic.Brightness())
         .on('get', this.getBrightness.bind(this))
         .on('set', this.setBrightness.bind(this));
+
+    if (this.singleChannel == false) {
+        lightbulbService
+            .addCharacteristic(new Characteristic.Hue())
+            .on('get', this.getHue.bind(this))
+            .on('set', this.setHue.bind(this));
+
+        lightbulbService
+            .addCharacteristic(new Characteristic.Saturation())
+            .on('get', this.getSaturation.bind(this))
+            .on('set', this.setSaturation.bind(this));
+    };
 
         return [informationService, lightbulbService];
 
@@ -99,7 +102,7 @@ MagicHomeAccessory.prototype.getColorFromDevice = function() {
     this.getState(function(settings) {
         this.color = settings.color;
         this.log("DEVICE COLOR: %s", settings.color.hue()+','+settings.color.saturationv()+','+settings.color.value());
-        this.log("DEVICE COLOR(rgb): %s", settings.color.rgb().array());
+        this.log("DEVICE COLOR(rgb): %s", settings.color.rgb().round().array());
     }.bind(this));
 };
 
@@ -164,7 +167,16 @@ MagicHomeAccessory.prototype.getBrightness = function(callback) {
 };
 
 MagicHomeAccessory.prototype.setBrightness = function(value, callback) {
-    this.color = Color(this.color).value(value);
+    if (this.singleChannel == true) {
+        // hue = 360, sat = 50 gives a nearly linear dimming range for
+        // brightness value 0-50 on the blue channel, and ramps up from there
+        this.color = Color(this.color).hue(360);
+        this.color = Color(this.color).saturationl(50);
+        this.color = Color(this.color).lightness(value);        
+        this.log("RGB = %s", this.color.rgb().round().array());
+    } else {
+        this.color = Color(this.color).value(value);
+    }
     this.setToCurrentColor();
     this.log("BRIGHTNESS: %s", value);
     callback();

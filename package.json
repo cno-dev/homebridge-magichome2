@@ -1,20 +1,20 @@
 {
-  "name": "homebridge-magichome",
+  "name": "homebridge-magichome2",
   "version": "0.3.0",
   "description": "Magic Home WiFi plugin for homebridge",
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/steve228uk/homebridge-magichome/raw/master/LICENSE"
+      "url": "https://github.com/danimal4326/homebridge-magichome2/raw/master/LICENSE"
     }
   ],
-  "homepage": "https://github.com/steve228uk/homebridge-magichome#readme",
+  "homepage": "https://github.com/danimal4326/homebridge-magichome2#readme",
   "repository": {
     "type": "git",
-    "url": "git://github.com/steve228uk/homebridge-magichome.git"
+    "url": "git://github.com/danimal4326/homebridge-magichome2.git"
   },
   "bugs": {
-    "url": "http://github.com/steve228uk/homebridge-magichome/issues"
+    "url": "http://github.com/danimal4326/homebridge-magichome2/issues"
   },
   "engines": {
     "node": ">=0.12.0",
