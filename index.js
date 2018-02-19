@@ -138,15 +138,11 @@ MagicHomeAccessory.prototype.setPowerState = function(value, callback) {
     });
 };
 
-
-// MARK: - HUE
+// HUE
 
 MagicHomeAccessory.prototype.getHue = function(callback) {
     var color = this.color;
-    this.getState(function(settings) {
-        callback(null, settings.color.hue());
-    });
-    //callback(null, color.hue());
+    callback(null, color.hue());
 };
 
 MagicHomeAccessory.prototype.setHue = function(value, callback) {
@@ -156,14 +152,25 @@ MagicHomeAccessory.prototype.setHue = function(value, callback) {
     callback();
 };
 
-// MARK: - BRIGHTNESS
+// SATURATION
+
+MagicHomeAccessory.prototype.getSaturation = function(callback) {
+    var color = this.color;
+    callback(null, color.saturationv());
+};
+
+MagicHomeAccessory.prototype.setSaturation = function(value, callback) {
+    this.color = Color(this.color).saturationv(value);
+    this.setToCurrentColor();
+    this.log("SATURATION: %s", value);
+    callback();
+};
+
+// BRIGHTNESS
 
 MagicHomeAccessory.prototype.getBrightness = function(callback) {
     var color = this.color;
-    this.getState(function(settings) {
-        callback(null, settings.color.value());
-    });
-    //callback(null, color.value());
+    callback(null, color.value());
 };
 
 MagicHomeAccessory.prototype.setBrightness = function(value, callback) {
@@ -179,22 +186,5 @@ MagicHomeAccessory.prototype.setBrightness = function(value, callback) {
     }
     this.setToCurrentColor();
     this.log("BRIGHTNESS: %s", value);
-    callback();
-};
-
-// MARK: - SATURATION
-
-MagicHomeAccessory.prototype.getSaturation = function(callback) {
-    var color = this.color;
-    this.getState(function(settings) {
-        callback(null, settings.color.saturationv());
-    });
-    //callback(null, color.saturationv());
-};
-
-MagicHomeAccessory.prototype.setSaturation = function(value, callback) {
-    this.color = Color(this.color).saturationv(value);
-    this.setToCurrentColor();
-    this.log("SATURATION: %s", value);
     callback();
 };
