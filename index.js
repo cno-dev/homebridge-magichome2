@@ -70,7 +70,7 @@ MagicHomeAccessory.prototype.getServices = function() {
 
 };
 
-// MARK: - UTIL
+// UTIL
 
 MagicHomeAccessory.prototype.sendCommand = function(command, callback) {
     var exec = require('child_process').exec;
@@ -115,7 +115,13 @@ MagicHomeAccessory.prototype.setToCurrentColor = function() {
     }
 
     var base = '-x ' + this.setup + ' -c ' + color.rgb().round().array();
-    this.sendCommand(base);
+    this.log("Command: %s", base);
+    this.sendCommand(base, function(error, stdout) {
+        console.log("STDOUT: %s", stdout);
+    });
+    this.sendCommand('-i', function(error, stdout) {
+        console.log("INFO: %s", stdout);
+    });
 };
 
 MagicHomeAccessory.prototype.setToWarmWhite = function() {
@@ -123,7 +129,7 @@ MagicHomeAccessory.prototype.setToWarmWhite = function() {
     this.sendCommand('-w ' + brightness);
 };
 
-// MARK: - POWERSTATE
+// POWERSTATE
 
 MagicHomeAccessory.prototype.getPowerState = function(callback) {
     this.getState(function(settings) {
@@ -141,8 +147,10 @@ MagicHomeAccessory.prototype.setPowerState = function(value, callback) {
 // HUE
 
 MagicHomeAccessory.prototype.getHue = function(callback) {
-    var color = this.color;
-    callback(null, color.hue());
+    this.getState(function(settings) {
+        this.color = settings.color
+        callback(null, settings.color.hue());
+    }.bind(this));
 };
 
 MagicHomeAccessory.prototype.setHue = function(value, callback) {
@@ -155,8 +163,9 @@ MagicHomeAccessory.prototype.setHue = function(value, callback) {
 // SATURATION
 
 MagicHomeAccessory.prototype.getSaturation = function(callback) {
-    var color = this.color;
-    callback(null, color.saturationv());
+    this.getState(function(settings) {
+        callback(null, settings.color.saturationv());
+    });
 };
 
 MagicHomeAccessory.prototype.setSaturation = function(value, callback) {
@@ -169,17 +178,16 @@ MagicHomeAccessory.prototype.setSaturation = function(value, callback) {
 // BRIGHTNESS
 
 MagicHomeAccessory.prototype.getBrightness = function(callback) {
-    var color = this.color;
-    callback(null, color.value());
+    this.getState(function(settings) {
+        callback(null, settings.color.value());
+    });
 };
 
 MagicHomeAccessory.prototype.setBrightness = function(value, callback) {
     if (this.singleChannel == true) {
-        // hue = 360, sat = 50 gives a nearly linear dimming range for
-        // brightness value 0-50 on the blue channel, and ramps up from there
-        this.color = Color(this.color).hue(360);
-        this.color = Color(this.color).saturationl(50);
-        this.color = Color(this.color).lightness(value);        
+        this.color = Color(this.color).hue(0);
+        this.color = Color(this.color).saturationv(0);
+        this.color = Color(this.color).value(value);        
         this.log("RGB = %s", this.color.rgb().round().array());
     } else {
         this.color = Color(this.color).value(value);

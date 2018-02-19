@@ -1,6 +1,6 @@
 {
   "name": "homebridge-magichome2",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Magic Home WiFi plugin for homebridge",
   "licenses": [
     {
