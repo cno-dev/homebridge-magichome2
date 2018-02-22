@@ -168,14 +168,27 @@ MagicHomeAccessory.prototype.setSaturation = function(value, callback) {
 // BRIGHTNESS
 
 MagicHomeAccessory.prototype.getBrightness = function(callback) {
-    callback(null, this.color.value());
+    if (this.singleChannel == true) {
+        var curRgbValue = this.color.rgb().array()[0];
+        if (curRgbValue <= 50) {
+            callback(null, curRgbValue);
+        } else {
+            var rgbToValue = Math.round((8.8348 + Math.sqrt(78.05369104 - (4 * 0.086 * (278.07 - curRgbValue ) ) ) ) / (2 * 0.086));
+            callback(null, rgbToValue);
+        }
+    } else {
+        callback(null, this.color.value());
+    }
 };
 
 MagicHomeAccessory.prototype.setBrightness = function(value, callback) {
     if (this.singleChannel == true) {
-        this.color = Color(this.color).hue(0);
-        this.color = Color(this.color).saturationv(0);
-        this.color = Color(this.color).value(value);        
+        if (value <= 50) {
+            this.color = Color.rgb([value, value, value]);
+        } else {
+            var valueToRgb = Math.round( ((0.086 * Math.pow(value, 2)) - (8.8348 * value) + 278.07), 0);
+            this.color = Color.rgb([valueToRgb, valueToRgb, valueToRgb]);
+        }
     } else {
         this.color = Color(this.color).value(value);
     }
