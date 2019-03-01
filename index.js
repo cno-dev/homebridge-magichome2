@@ -90,7 +90,7 @@ MagicHomeAccessory.prototype.getState = function (callback) {
         
         if(isOn && isOn.length > 0) settings.on = true;
         if(colors && colors.length > 0) {
-            settings.color = Color('rgb(' + stdout.match(/\d{1,3}/g) + ')');
+           settings.color = Color('rgb' + colors);
         }
 
         callback(settings);
