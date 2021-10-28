@@ -74,7 +74,8 @@ MagicHomeAccessory.prototype.getServices = function() {
 
 MagicHomeAccessory.prototype.sendCommand = function(command, callback) {
     var exec = require('child_process').exec;
-    var cmd =  __dirname + '/flux_led.py ' + this.ip + ' ' + command + ' -v';
+    //var cmd =  __dirname + '/flux_led.py ' + this.ip + ' ' + command + ' -v';
+    var cmd =  __dirname + '/flux_led.py ' + this.ip + ' ' + command;
     exec(cmd, callback);
 };
 
@@ -170,12 +171,8 @@ MagicHomeAccessory.prototype.setSaturation = function(value, callback) {
 MagicHomeAccessory.prototype.getBrightness = function(callback) {
     if (this.singleChannel == true) {
         var curRgbValue = this.color.rgb().array()[0];
-        if (curRgbValue <= 50) {
-            callback(null, curRgbValue);
-        } else {
-            var rgbToValue = Math.round((8.8348 + Math.sqrt(78.05369104 - (4 * 0.086 * (278.07 - curRgbValue ) ) ) ) / (2 * 0.086));
-            callback(null, rgbToValue);
-        }
+        var rgbToValue = Math.round( 41.55343 * Math.log10(curRgbValue) );
+        callback(null, rgbToValue);
     } else {
         callback(null, this.color.value());
     }
@@ -183,12 +180,8 @@ MagicHomeAccessory.prototype.getBrightness = function(callback) {
 
 MagicHomeAccessory.prototype.setBrightness = function(value, callback) {
     if (this.singleChannel == true) {
-        if (value <= 50) {
-            this.color = Color.rgb([value, value, value]);
-        } else {
-            var valueToRgb = Math.round( ((0.086 * Math.pow(value, 2)) - (8.8348 * value) + 278.07), 0);
-            this.color = Color.rgb([valueToRgb, valueToRgb, valueToRgb]);
-        }
+        var valueToRgb = Math.round( 10 ** (0.024064 * value ) );
+        this.color = Color.rgb([valueToRgb, valueToRgb, valueToRgb]);
     } else {
         this.color = Color(this.color).value(value);
     }
