@@ -1,0 +1,45 @@
+{
+  "pluginAlias": "homebridge-magichome2",
+  "pluginType": "accessory",
+  "singular": false,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "Magichome",
+        "description": "The name of the device",
+        "required": true
+      },
+      "ip": {
+        "title": "IP Address / Hostname",
+        "type": "string",
+        "format": "hostname",
+        "required": true
+      },
+      "setup": {
+        "title": "Mode",
+        "type": "string",
+        "default": "RGBW",
+        "oneOf": [
+          { "title": "RGBW", "enum": ["RGBW"] },
+          { "title": "RGBWW", "enum": ["RGBWW"] },
+          { "title": "RGB", "enum": ["RGB"] }
+        ],
+        "required": true
+      },
+      "purewhite": {
+        "title": "Pure White",
+        "type": "boolean",
+        "required": false
+      },
+      "singleChannel": {
+        "title": "Single Channel Mode",
+        "type": "boolean",
+        "required": false
+      }
+
+    }
+  }
+}
