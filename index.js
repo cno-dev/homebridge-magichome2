@@ -8,7 +8,7 @@ module.exports = function(homebridge){
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
 
-    homebridge.registerAccessory('homebridge-magichome', 'MagicHome', MagicHomeAccessory, false);
+    homebridge.registerAccessory('homebridge-magichome2-fixed', 'MagicHome', MagicHomeAccessory, false);
 };
 
 function MagicHomeAccessory(log, config, api) {
